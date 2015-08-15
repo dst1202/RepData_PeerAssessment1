@@ -99,28 +99,65 @@ sum(is.na(activityData$steps))
 ```
 ## [1] 2304
 ```
+
+```r
+newCol <- rep(floor(intervalMeans$steps), 61)
+imputedData <- cbind(activityData, newCol)
+imputedData$newCol[which(!is.na(imputedData$steps))] <- imputedData$steps[which(!is.na(imputedData$steps))]
+library(reshape2)
+impMelt <- melt(imputedData, id = c("date", "interval"), measure.vars = c("newCol"))
+dateSums <- dcast(impMelt, date ~ variable, sum, na.rm = TRUE)
+plot(newCol ~ date, data = dateSums, type = "h", ylab = "Steps", xlab = "Date")
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
+
+```r
+mean(xtabs(newCol ~ date, data = imputedData))
+```
+
+```
+## [1] 10749.77
+```
+
+```r
+mean(dateSums$newCol, na.rm = TRUE)
+```
+
+```
+## [1] 10749.77
+```
+
+```r
+median(xtabs(newCol ~ date, data = imputedData))
+```
+
+```
+## 2012-11-09 
+##      10641
+```
+
+```r
+median(xtabs(newCol ~ date, data = imputedData), na.rm = TRUE)
+```
+
+```
+## [1] 10641
+```
+
+```r
+median(dateSums$newCol, na.rm = TRUE)
+```
+
+```
+## [1] 10641
+```
 Using the floor function as step data should be in whole numbers
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
 ```r
 library(dplyr)
-```
-
-```
-## 
-## Attaching package: 'dplyr'
-## 
-## The following object is masked from 'package:stats':
-## 
-##     filter
-## 
-## The following objects are masked from 'package:base':
-## 
-##     intersect, setdiff, setequal, union
-```
-
-```r
 activityData <- mutate(activityData, days = factor(1*(weekdays(date) %in% c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday")), labels = c("weekday", "weekend")))
 actMelt <- melt(activityData, id = c("date", "interval", "days"), measure.vars = c("steps"))
 intervalMeans <- dcast(actMelt, interval + days ~ variable, mean, na.rm = TRUE)

@@ -40,11 +40,25 @@ intervalMeans[intervalMeans$steps == max(intervalMeans$steps),]
 ## Imputing missing values
 ```{r}
 sum(is.na(activityData$steps))
+
+newCol <- rep(floor(intervalMeans$steps), 61)
+imputedData <- cbind(activityData, newCol)
+imputedData$newCol[which(!is.na(imputedData$steps))] <- imputedData$steps[which(!is.na(imputedData$steps))]
+library(reshape2)
+impMelt <- melt(imputedData, id = c("date", "interval"), measure.vars = c("newCol"))
+dateSums <- dcast(impMelt, date ~ variable, sum, na.rm = TRUE)
+plot(newCol ~ date, data = dateSums, type = "h", ylab = "Steps", xlab = "Date")
+mean(xtabs(newCol ~ date, data = imputedData))
+mean(dateSums$newCol, na.rm = TRUE)
+median(xtabs(newCol ~ date, data = imputedData))
+median(xtabs(newCol ~ date, data = imputedData), na.rm = TRUE)
+median(dateSums$newCol, na.rm = TRUE)
+
 ``` 
 Using the floor function as step data should be in whole numbers
 
 ## Are there differences in activity patterns between weekdays and weekends?
-```{r warning = FALSE}
+```{r warning = FALSE, message = FALSE}
 library(dplyr)
 activityData <- mutate(activityData, days = factor(1*(weekdays(date) %in% c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday")), labels = c("weekday", "weekend")))
 actMelt <- melt(activityData, id = c("date", "interval", "days"), measure.vars = c("steps"))
