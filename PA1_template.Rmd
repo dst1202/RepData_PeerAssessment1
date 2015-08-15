@@ -20,15 +20,24 @@ xtabs(steps ~ date, data = activityData)
 
 ```{r}
 plot(xtabs(steps ~ date, data = activityData), type = "h", ylab = "Steps", xlab = "Date")
+mean(xtabs(steps ~ date, data = activityData))
+median(xtabs(steps ~ date, data = activityData))
 ```
 
 ## What is the average daily activity pattern?
-
+```{r}
+library(reshape2)
+actMelt <- melt(activityData, id = c("date", "interval"), measure.vars = c("steps"))
+intervalMeans <- dcast(actMelt, interval ~ variable, mean, na.rm = TRUE)
+plot(steps ~ interval, data = intervalMeans, type = "l")
+max(intervalMeans$steps)
+intervalMeans[intervalMeans$steps == max(intervalMeans$steps),]
+```
 
 
 ## Imputing missing values
 
-
+Using the floor function as step data should be in whole numbers
 
 ## Are there differences in activity patterns between weekdays and weekends?
 weekdays(unique(activityData$date)

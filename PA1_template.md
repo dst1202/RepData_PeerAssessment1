@@ -66,8 +66,57 @@ plot(xtabs(steps ~ date, data = activityData), type = "h", ylab = "Steps", xlab 
 
 ![](PA1_template_files/figure-html/unnamed-chunk-2-1.png) 
 
+```r
+mean(xtabs(steps ~ date, data = activityData))
+```
+
+```
+## [1] 10766.19
+```
+
+```r
+median(xtabs(steps ~ date, data = activityData))
+```
+
+```
+## 2012-11-12 
+##      10765
+```
+
 ## What is the average daily activity pattern?
 
+```r
+library(reshape2)
+```
+
+```
+## Warning: package 'reshape2' was built under R version 3.1.3
+```
+
+```r
+actMelt <- melt(activityData, id = c("date", "interval"), measure.vars = c("steps"))
+intervalMeans <- dcast(actMelt, interval ~ variable, mean, na.rm = TRUE)
+plot(steps ~ interval, data = intervalMeans, type = "l")
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
+
+```r
+max(intervalMeans$steps)
+```
+
+```
+## [1] 206.1698
+```
+
+```r
+intervalMeans[intervalMeans$steps == max(intervalMeans$steps),]
+```
+
+```
+##     interval    steps
+## 104      835 206.1698
+```
 
 
 ## Imputing missing values
