@@ -11,23 +11,25 @@ output:
 dataFile <- unz(description = "activity.zip", filename = "activity.csv")
 activityData <- read.table(file = dataFile, sep = ",", header = TRUE, na.strings = "NA")
 activityData$date <- as.Date(activityData$date, format = "%Y-%m-%d")
-head(activityData)
-str(activityData)
-xtabs(steps ~ date, data = activityData)
+## melt data for later use
+library(reshape2)
+actMelt <- melt(activityData, id = c("date", "interval"), measure.vars = c("steps"))
 ```
 
 ## What is mean total number of steps taken per day?
 
 ```{r}
-plot(xtabs(steps ~ date, data = activityData), type = "h", ylab = "Steps", xlab = "Date")
+dateSums <- dcast(actMelt, date ~ variable, sum, na.rm = TRUE)
+plot(steps ~ date, data = dateSums, type = "h", ylab = "Steps", xlab = "Date")
 mean(xtabs(steps ~ date, data = activityData))
+mean(dateSums$steps, na.rm = TRUE)
 median(xtabs(steps ~ date, data = activityData))
+median(xtabs(steps ~ date, data = activityData), na.rm = TRUE)
+median(dateSums$steps, na.rm = TRUE)
 ```
 
 ## What is the average daily activity pattern?
 ```{r}
-library(reshape2)
-actMelt <- melt(activityData, id = c("date", "interval"), measure.vars = c("steps"))
 intervalMeans <- dcast(actMelt, interval ~ variable, mean, na.rm = TRUE)
 plot(steps ~ interval, data = intervalMeans, type = "l")
 max(intervalMeans$steps)
@@ -41,3 +43,11 @@ Using the floor function as step data should be in whole numbers
 
 ## Are there differences in activity patterns between weekdays and weekends?
 weekdays(unique(activityData$date)
+
+
+## exploratory scripting
+
+head(activityData)
+str(activityData)
+xtabs(steps ~ date, data = activityData)
+plot(xtabs(steps ~ date, data = activityData), type = "h", ylab = "Steps", xlab = "Date")
