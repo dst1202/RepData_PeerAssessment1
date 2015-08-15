@@ -7,12 +7,20 @@ output:
 
 
 ## Loading and preprocessing the data
-
-
+```{r}
+dataFile <- unz(description = "activity.zip", filename = "activity.csv")
+activityData <- read.table(file = dataFile, sep = ",", header = TRUE, na.strings = "NA")
+activityData$date <- as.Date(activityData$date, format = "%Y-%m-%d")
+head(activityData)
+str(activityData)
+xtabs(steps ~ date, data = activityData)
+```
 
 ## What is mean total number of steps taken per day?
 
-
+```{r}
+plot(xtabs(steps ~ date, data = activityData), type = "h", ylab = "Steps", xlab = "Date")
+```
 
 ## What is the average daily activity pattern?
 
