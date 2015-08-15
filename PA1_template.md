@@ -9,13 +9,6 @@ activityData <- read.table(file = dataFile, sep = ",", header = TRUE, na.strings
 activityData$date <- as.Date(activityData$date, format = "%Y-%m-%d")
 ## melt data for later use
 library(reshape2)
-```
-
-```
-## Warning: package 'reshape2' was built under R version 3.1.3
-```
-
-```r
 actMelt <- melt(activityData, id = c("date", "interval"), measure.vars = c("steps"))
 ```
 
@@ -99,11 +92,44 @@ intervalMeans[intervalMeans$steps == max(intervalMeans$steps),]
 
 ## Imputing missing values
 
+```r
+sum(is.na(activityData$steps))
+```
+
+```
+## [1] 2304
+```
 Using the floor function as step data should be in whole numbers
 
 ## Are there differences in activity patterns between weekdays and weekends?
-weekdays(unique(activityData$date)
 
+```r
+library(dplyr)
+```
+
+```
+## 
+## Attaching package: 'dplyr'
+## 
+## The following object is masked from 'package:stats':
+## 
+##     filter
+## 
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+```
+
+```r
+activityData <- mutate(activityData, days = factor(1*(weekdays(date) %in% c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday")), labels = c("weekday", "weekend")))
+actMelt <- melt(activityData, id = c("date", "interval", "days"), measure.vars = c("steps"))
+intervalMeans <- dcast(actMelt, interval + days ~ variable, mean, na.rm = TRUE)
+par(mfrow = c(2,1))
+plot(steps ~ interval, data = intervalMeans[intervalMeans$days == "weekend",], type = "l")
+plot(steps ~ interval, data = intervalMeans[intervalMeans$days == "weekday",], type = "l")
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png) 
 
 ## exploratory scripting
 
@@ -111,3 +137,8 @@ head(activityData)
 str(activityData)
 xtabs(steps ~ date, data = activityData)
 plot(xtabs(steps ~ date, data = activityData), type = "h", ylab = "Steps", xlab = "Date")
+intervalMeans[activityData[is.na(activityData$steps),3]==intervalMeans$interval,2]
+17568/288
+[1] 61
+newCol <- rep(floor(intervalMeans$steps), 61)
+imputedData <- cbind(activityData, newCol)
