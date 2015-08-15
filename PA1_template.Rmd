@@ -31,3 +31,4 @@ plot(xtabs(steps ~ date, data = activityData), type = "h", ylab = "Steps", xlab 
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
+weekdays(unique(activityData$date)
