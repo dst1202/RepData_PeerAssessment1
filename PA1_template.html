@@ -126,8 +126,7 @@ plot(steps ~ interval, data = intervalMeans, type = &quot;l&quot;)</code></pre>
 <p>The total number of missing values in the dataset (i.e. the total number of rows with NAs)</p>
 <pre class="r"><code>sum(is.na(activityData$steps))</code></pre>
 <pre><code>## [1] 2304</code></pre>
-<p>Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.</p>
-<p>Taking the mean for each 5-minute interval and replacing <code>NAs</code> with a <code>floor()</code> function of that. Using the floor function as steps will always be round numbers.</p>
+<p>A strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. Taking the mean for each 5-minute interval and replacing <code>NAs</code> with a <code>floor()</code> function of that. Using the floor function as steps will always be round numbers.</p>
 <p>Create a new dataset that is equal to the original dataset but with the missing data filled in.</p>
 <pre class="r"><code>newCol &lt;- rep(floor(intervalMeans$steps), 61)
 imputedData &lt;- cbind(activityData, newCol)

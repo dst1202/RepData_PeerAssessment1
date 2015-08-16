@@ -70,9 +70,7 @@ sum(is.na(activityData$steps))
 ```
 
 
-Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.
-
-Taking the mean for each 5-minute interval and replacing `NAs` with a `floor()` function of that. Using the floor function as steps will always be round numbers. 
+A strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. Taking the mean for each 5-minute interval and replacing `NAs` with a `floor()` function of that. Using the floor function as steps will always be round numbers. 
 
 Create a new dataset that is equal to the original dataset but with the missing data filled in. 
 ```{r echo = TRUE}
