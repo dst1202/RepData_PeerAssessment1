@@ -157,7 +157,7 @@ median(xtabs(newCol ~ date, data = imputedData), na.rm = TRUE)
 ## [1] 10641
 ```
 
-The Mean and Median are both different from the estimates from the first part of the assignment. They have fallen after imputing missing data. There is less effect on the Mean as would be expected as mean interval estimates were used in imputing the missing data. 
+The Mean and Median are both different from the estimates from the first part of the assignment. They have fallen after imputing missing data. There is less effect on the Mean as would be expected as mean interval estimates were used in imputing the missing data. Use of the floor function for imputing has imputed zeroes in intervals of low activity which may have had an affect on the Median estimates. 
 
 ## Are there differences in activity patterns between weekdays and weekends? 
 

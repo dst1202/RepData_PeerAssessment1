@@ -142,7 +142,7 @@ intervalMeans &lt;- dcast(impMelt, date ~ variable, sum, na.rm = TRUE)</code></p
 <p>Median:</p>
 <pre class="r"><code>median(xtabs(newCol ~ date, data = imputedData), na.rm = TRUE)</code></pre>
 <pre><code>## [1] 10641</code></pre>
-<p>The Mean and Median are both different from the estimates from the first part of the assignment. They have fallen after imputing missing data. There is less effect on the Mean as would be expected as mean interval estimates were used in imputing the missing data.</p>
+<p>The Mean and Median are both different from the estimates from the first part of the assignment. They have fallen after imputing missing data. There is less effect on the Mean as would be expected as mean interval estimates were used in imputing the missing data. Use of the floor function for imputing has imputed zeroes in intervals of low activity which may have had an affect on the Median estimates.</p>
 </div>
 <div id="are-there-differences-in-activity-patterns-between-weekdays-and-weekends" class="section level2">
 <h2>Are there differences in activity patterns between weekdays and weekends?</h2>
